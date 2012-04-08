@@ -16,7 +16,7 @@
 
 @interface JSCache : NSObject
 
-+ (CacheService *)instance;
++ (JSCache *)instance;
 
 - (void)cacheObject:(id<NSObject, NSCopying, NSCoding>)object forKey:(NSString *)key;
 - (id)cachedObjectForKey:(NSString *)key;
