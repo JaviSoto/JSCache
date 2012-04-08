@@ -14,7 +14,7 @@
  limitations under the License. 
  */
 
-#import "JSCacheService.h"
+#import "JSCache.h"
 
 #import "EGOCache.h"
 
@@ -23,36 +23,36 @@
 #define kJSCacheImageCacheDurationInSeconds 1296000 // 15 days
 #define kJSCacheDataCacheDurationInSeconds 604800 // 7 days
 
-#define JSCacheServiceDebug 0
+#define JSCacheDebug 0
 
-#if JSCacheServiceDebug
-    #define JSCacheServiceDebugLog(s,...) NSLog([NSString stringWithFormat:@"[%@] %@", NSStringFromClass[self class], ##__VA_ARGS__])
+#if JSCacheDebug
+    #define JSCacheDebugLog(s,...) NSLog([NSString stringWithFormat:@"[%@] %@", NSStringFromClass[self class], ##__VA_ARGS__])
 #else
-    #define JSCacheServiceDebugLog(s,...)
+    #define JSCacheDebugLog(s,...)
 #endif
 
-@interface JSCacheService()
+@interface JSCache()
 {
-    dispatch_queue_t _cacheServiceQueue;
+    dispatch_queue_t _jsCacheQueue;
 }
 @end
 
-@implementation JSCacheService
+@implementation JSCache
 
 #pragma mark - Singleton
 
-+ (CacheService *)instance
++ (JSCache *)instance
 {
     static dispatch_once_t dispatchOncePredicate;
-    static CacheService *myInstance = nil;
+    static JSCache *myInstance = nil;
     
     dispatch_once(&dispatchOncePredicate, ^{
         myInstance = [[self alloc] init];
         
-        myInstance->_cacheServiceQueue = dispatch_queue_create("JSCacheServiceQueue", DISPATCH_QUEUE_CONCURRENT);
+        myInstance->_jsCacheQueue = dispatch_queue_create("JSCacheQueue", DISPATCH_QUEUE_CONCURRENT);
         
         #if !JSCACHE_ENABLED
-            JSCacheServiceDebugLog(@"CACHE NOT ENABLED");
+            JSCacheDebugLog(@"CACHE NOT ENABLED");
             [myInstance invalidateAllCachedObjects];
         #endif
     });
@@ -72,9 +72,9 @@
 	        objectToArchive = [[(NSObject *)object copy] autorelease];
 	    }
     
-	    dispatch_async(_cacheServiceQueue, ^{        
+	    dispatch_async(_jsCacheQueue, ^{        
 	        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:objectToArchive]; 
-	        JSCacheServiceDebugLog(@"Caching object %@ for key %@", object, key);
+	        JSCacheDebugLog(@"Caching object %@ for key %@", object, key);
             
 	        dispatch_async(dispatch_get_main_queue(), ^{
 	            [[EGOCache currentCache] setData:data forKey:key withTimeoutInterval:kJSCacheDataCacheDurationInSeconds];
@@ -93,13 +93,13 @@
     
 	    if (cachedObject)
 	    {
-	        JSCacheServiceDebugLog(@"Returning cached object for key %@", key);
+	        JSCacheDebugLog(@"Returning cached object for key %@", key);
 	        id object = [NSKeyedUnarchiver unarchiveObjectWithData:cachedObject];
 	        return object;   
 	    }
 	    else
 	    {
-	        JSCacheServiceDebugLog(@"Cache miss for key %@", key);
+	        JSCacheDebugLog(@"Cache miss for key %@", key);
 	        return nil;
 	    }
 	#endif
@@ -121,12 +121,12 @@
     
 	    if (cachedImage)
 	    {
-	        JSCacheServiceDebugLog(@"Returning cached image for key %@", key);
+	        JSCacheDebugLog(@"Returning cached image for key %@", key);
 	        return cachedImage;
 	    }
 	    else
 	    {
-	        JSCacheServiceDebugLog(@"Cache miss for key %@", key);
+	        JSCacheDebugLog(@"Cache miss for key %@", key);
 	        return nil;
 	    }
 	#endif
@@ -135,7 +135,7 @@
 - (void)cacheImageData:(NSData *)data forKey:(NSString *)key
 {
     #if JSCACHE_ENABLED    
-	    JSCacheServiceDebugLog(@"Caching image for key %@", key);
+	    JSCacheDebugLog(@"Caching image for key %@", key);
 	    [[EGOCache currentCache] setData:data forKey:key withTimeoutInterval:kImageCacheDurationInSeconds];
     #endif
 }
@@ -149,12 +149,12 @@
     
 	    if (cachedImageData)
 	    {
-	        JSCacheServiceDebugLog(@"Returning cached image data for key %@", key);
+	        JSCacheDebugLog(@"Returning cached image data for key %@", key);
 	        return cachedImageData;
 	    }
 	    else
 	    {
-	        JSCacheServiceDebugLog(@"Cache miss for key %@", key);
+	        JSCacheDebugLog(@"Cache miss for key %@", key);
 	        return nil;
 	    }
 	#endif
@@ -162,19 +162,19 @@
 
 - (void)invalidateCachedObjectForKey:(NSString *)key
 {
-    JSCacheServiceDebugLog(@"Invalidating cached object for key %@", key);
+    JSCacheDebugLog(@"Invalidating cached object for key %@", key);
     [[EGOCache currentCache] removeCacheForKey:key];
 }
 
 - (void)invalidateAllCachedObjects
 {
-    NSLog(@"[JSCacheService] Invalidating all cached objects");
+    NSLog(@"[JSCache] Invalidating all cached objects");
     [[EGOCache currentCache] clearCache];
 }
 
 - (void)dealloc
 {
-    dispatch_release(_cacheServiceQueue);
+    dispatch_release(_jsCacheQueue);
     
     [super dealloc];
 }

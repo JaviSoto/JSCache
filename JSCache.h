@@ -14,7 +14,7 @@
  limitations under the License. 
  */
 
-@interface JSCacheService : NSObject
+@interface JSCache : NSObject
 
 + (CacheService *)instance;
 
