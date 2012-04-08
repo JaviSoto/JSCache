@@ -136,7 +136,7 @@
 {
     #if JSCACHE_ENABLED    
 	    JSCacheDebugLog(@"Caching image for key %@", key);
-	    [[EGOCache currentCache] setData:data forKey:key withTimeoutInterval:kImageCacheDurationInSeconds];
+	    [[EGOCache currentCache] setData:data forKey:key withTimeoutInterval:kJSCacheImageCacheDurationInSeconds];
     #endif
 }
 
