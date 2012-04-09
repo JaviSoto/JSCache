@@ -1,10 +1,22 @@
 # Description
-JSCache is a simple and fast thread-safe key-value cache class to easily archive objects and cache images to disk.
-It is built on top of [EGOCache](https://github.com/enormego/EGOCache)
+- JSCache is a simple and fast thread-safe key-value cache class to easily archive objects and cache images to disk.
+- It is built on top of [EGOCache](https://github.com/enormego/EGOCache)
+- It can be easily turned off for debugging just by setting 
+
+```objective-c
+#define JSCACHE_ENABLED 0
+```
+
+- The default cache durations are these (but can be easily changed)
+
+```objective-c
+#define kJSCacheImageCacheDurationInSeconds 1296000 // 15 days
+#define kJSCacheDataCacheDurationInSeconds 604800 // 7 days
+```
 
 # Usage
 
-- You can get a shared instance by calling
+- You can get a shared instance by calling:
 
 ```objective-c
 + (JSCache *)sharedCache;
@@ -27,7 +39,6 @@ It is built on top of [EGOCache](https://github.com/enormego/EGOCache)
 
 ```objective-c
 - (void)cacheImage:(UIImage *)image forKey:(NSString *)key;
-
 - (void)cacheImageData:(NSData *)data forKey:(NSString *)key;
 ```
 
