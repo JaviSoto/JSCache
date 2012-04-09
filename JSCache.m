@@ -41,7 +41,7 @@
 
 #pragma mark - Singleton
 
-+ (JSCache *)instance
++ (JSCache *)sharedCache
 {
     static dispatch_once_t dispatchOncePredicate;
     static JSCache *myInstance = nil;
@@ -62,7 +62,7 @@
 
 #pragma mark -
 
-- (void)cacheObject:(id<NSObject, NSCopying, NSCoding>)object forKey:(NSString *)key
+- (void)cacheObject:(id<NSObject, NSCoding>)object forKey:(NSString *)key
 {
     #if JSCACHE_ENABLED
     	id objectToArchive = object;
