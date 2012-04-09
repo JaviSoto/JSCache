@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Jscache : Simple and fast thread-safe key-value cache class to easily archive objects and cache images to disk (built on top of EGOCache)" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Jscache</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/JaviSoto/JSCache">Fork Me on GitHub</a>
+
+          <h1 id="project_title">Jscache</h1>
+          <h2 id="project_tagline">Simple and fast thread-safe key-value cache class to easily archive objects and cache images to disk (built on top of EGOCache)</h2>
+
+          <section id="downloads">
+            <a class="zip_download_link" href="https://github.com/JaviSoto/JSCache/zipball/master">Download this project as a .zip file</a>
+            <a class="tar_download_link" href="https://github.com/JaviSoto/JSCache/tarball/master">Download this project as a tar.gz file</a>
+          </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>Description</h1>
+
+<ul>
+<li>JSCache is a simple and fast thread-safe key-value cache class to easily archive objects and cache images to disk.</li>
+<li>It is built on top of <a href="https://github.com/enormego/EGOCache">EGOCache</a>
+</li>
+<li>It can be easily turned off for debugging just by setting </li>
+</ul><div class="highlight">
+<pre><span class="cp">#define JSCACHE_ENABLED 0</span>
+</pre>
+</div>
+
+
+<ul>
+<li>The default cache durations are these (but can be easily changed)</li>
+</ul><div class="highlight">
+<pre><span class="cp">#define kJSCacheImageCacheDurationInSeconds 1296000 </span><span class="c1">// 15 days</span>
+<span class="cp">#define kJSCacheDataCacheDurationInSeconds 604800 </span><span class="c1">// 7 days</span>
+</pre>
+</div>
+
+
+<h1>Usage</h1>
+
+<ul>
+<li>You can get a shared instance by calling:</li>
+</ul><div class="highlight">
+<pre><span class="k">+</span> <span class="p">(</span><span class="n">JSCache</span> <span class="o">*</span><span class="p">)</span><span class="nf">sharedCache</span><span class="p">;</span>
+</pre>
+</div>
+
+
+<h2>Data caching</h2>
+
+<ul>
+<li>To cache objects you simply call -cacheObject:forKey: passing an object which can be serialized (conforms to the NSCoding protocol)</li>
+</ul><div class="highlight">
+<pre><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">cacheObject:</span><span class="p">(</span><span class="kt">id</span><span class="o">&lt;</span><span class="n">NSObject</span><span class="p">,</span> <span class="n">NSCoding</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">object</span> <span class="nf">forKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span><span class="p">;</span>
+</pre>
+</div>
+
+
+<ul>
+<li>This method will archive the object in a background queue for avoiding unnecessarily blocking the UI and then pass the NSData to EGOCache to save it to disk.</li>
+<li>You can later on access that object by calling -cachedObjectForKey: and passing the same key.</li>
+</ul><h2>Image caching</h2>
+
+<ul>
+<li>To cache an image object you call -cacheImage:forKey: with an UIImage object or -cacheImageData:forKey: with an NSData representing the image. Usually you will want the URL from where you got the image to be the key.</li>
+</ul><div class="highlight">
+<pre><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">cacheImage:</span><span class="p">(</span><span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nv">image</span> <span class="nf">forKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">cacheImageData:</span><span class="p">(</span><span class="n">NSData</span> <span class="o">*</span><span class="p">)</span><span class="nv">data</span> <span class="nf">forKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span><span class="p">;</span>
+</pre>
+</div>
+
+
+<ul>
+<li>And then to retrieve a cached image you just call -cachedImageForKey: or -cachedImageDataForKey:.</li>
+</ul><h2>Invalidation of cached objects</h2>
+
+<ul>
+<li>You can call -invalidateAllCachedObjects to purge the whole cache, or you can call -invalidateCachedObjectForKey: to invalidate a certain cached object.</li>
+</ul><div class="highlight">
+<pre><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">invalidateCachedObjectForKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">invalidateAllCachedObjects</span><span class="p">;</span>
+</pre>
+</div>
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Jscache maintained by <a href="https://github.com/JaviSoto">JaviSoto</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker(" UA-30545231-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
