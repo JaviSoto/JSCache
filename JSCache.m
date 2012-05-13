@@ -105,6 +105,7 @@
 	#endif
 }
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED
 - (void)cacheImage:(UIImage *)image forKey:(NSString *)key
 {
     #if JSCACHE_ENABLED
@@ -131,6 +132,7 @@
 	    }
 	#endif
 }
+#endif
 
 - (void)cacheImageData:(NSData *)data forKey:(NSString *)key
 {

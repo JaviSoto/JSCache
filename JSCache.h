@@ -21,8 +21,10 @@
 - (void)cacheObject:(id<NSObject, NSCoding>)object forKey:(NSString *)key;
 - (id)cachedObjectForKey:(NSString *)key;
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED
 - (void)cacheImage:(UIImage *)image forKey:(NSString *)key;
 - (UIImage *)cachedImageForKey:(NSString *)key;
+#endif
 
 - (void)cacheImageData:(NSData *)data forKey:(NSString *)key;
 - (NSData *)cachedImageDataForKey:(NSString *)key;
