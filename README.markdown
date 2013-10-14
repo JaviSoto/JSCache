@@ -52,3 +52,6 @@
 - (void)invalidateCachedObjectForKey:(NSString *)key;
 - (void)invalidateAllCachedObjects;
 ```
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/JaviSoto/jscache/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
