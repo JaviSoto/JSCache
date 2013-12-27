@@ -77,7 +77,7 @@
 	        JSCacheDebugLog(@"Caching object %@ for key %@", object, key);
             
 	        dispatch_async(dispatch_get_main_queue(), ^{
-	            [[EGOCache currentCache] setData:data forKey:key withTimeoutInterval:kJSCacheDataCacheDurationInSeconds];
+	            [[EGOCache globalCache] setData:data forKey:key withTimeoutInterval:kJSCacheDataCacheDurationInSeconds];
 	        });
 
 	    });
@@ -89,7 +89,7 @@
     #if !JSCACHE_ENABLED
         return nil;
     #else
-    	id cachedObject = [[EGOCache currentCache] dataForKey:key];
+    	id cachedObject = [[EGOCache globalCache] dataForKey:key];
     
 	    if (cachedObject)
 	    {
@@ -118,7 +118,7 @@
     #if !JSCACHE_ENABLED
         return nil;
     #else 
-   	 	UIImage *cachedImage = [[EGOCache currentCache] imageForKey:key];
+   	 	UIImage *cachedImage = [[EGOCache globalCache] imageForKey:key];
     
 	    if (cachedImage)
 	    {
@@ -138,7 +138,7 @@
 {
     #if JSCACHE_ENABLED    
 	    JSCacheDebugLog(@"Caching image for key %@", key);
-	    [[EGOCache currentCache] setData:data forKey:key withTimeoutInterval:kJSCacheImageCacheDurationInSeconds];
+	    [[EGOCache globalCache] setData:data forKey:key withTimeoutInterval:kJSCacheImageCacheDurationInSeconds];
     #endif
 }
 
@@ -147,7 +147,7 @@
     #if !JSCACHE_ENABLED
         return nil;
     #else
-    	NSData *cachedImageData = [[EGOCache currentCache] dataForKey:key];
+    	NSData *cachedImageData = [[EGOCache globalCache] dataForKey:key];
     
 	    if (cachedImageData)
 	    {
@@ -165,13 +165,13 @@
 - (void)invalidateCachedObjectForKey:(NSString *)key
 {
     JSCacheDebugLog(@"Invalidating cached object for key %@", key);
-    [[EGOCache currentCache] removeCacheForKey:key];
+    [[EGOCache globalCache] removeCacheForKey:key];
 }
 
 - (void)invalidateAllCachedObjects
 {
     NSLog(@"[JSCache] Invalidating all cached objects");
-    [[EGOCache currentCache] clearCache];
+    [[EGOCache globalCache] clearCache];
 }
 
 - (void)dealloc
