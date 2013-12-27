@@ -69,7 +69,11 @@
     
 	    if ([objectToArchive isKindOfClass:[NSMutableArray class]] || [objectToArchive isKindOfClass:[NSMutableDictionary class]] || [objectToArchive isKindOfClass:[NSMutableSet class]]) // If its'a mutable collection, make a copy to avoid it being mutated while archiving
 	    {
+#if !__has_feature(objc_arc)	    	
 	        objectToArchive = [[(NSObject *)object copy] autorelease];
+#else	        
+	        objectToArchive = [(NSObject *)object copy];
+#endif	        
 	    }
     
 	    dispatch_async(_jsCacheQueue, ^{        
@@ -174,11 +178,13 @@
     [[EGOCache currentCache] clearCache];
 }
 
+#if !__has_feature(objc_arc)
 - (void)dealloc
 {
     dispatch_release(_jsCacheQueue);
     
     [super dealloc];
 }
+#endif
 
 @end
